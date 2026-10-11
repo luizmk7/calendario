@@ -2,7 +2,34 @@
 
 Painel simples para planejar e acompanhar publicações de várias empresas. Versão independente em **Next.js + Supabase**, preparada para importar na Vercel.
 
-## O que está pronto
+
+## Atualização: painel do cliente e notas internas
+
+A nova versão inclui calendário por cliente, quantidades previstas/publicadas, temas opcionais, notas internas privadas, novidades enviadas pelo cliente e gestão de acessos. O gestor continua vendo todas as suas empresas.
+
+**Banco existente:** siga [ATIVAR-PAINEL-CLIENTE.md](supabase/ATIVAR-PAINEL-CLIENTE.md) e execute [a migração](supabase/migrations/20261011_client_portal.sql) no Supabase. Sem a migração, o calendário anterior continua disponível para contas já inicializadas. A migração não é executada automaticamente pelo deploy.
+
+Novos clientes usam contas confirmadas do Supabase Auth, vinculadas por e-mail em **Empresa → Acessos**. Não são criados calendários próprios para esses clientes.
+
+### Verificação
+
+```bash
+npm test
+npm run typecheck
+npm run build
+npx playwright install chromium
+npm run test:ui
+```
+
+Os testes de banco executam a estrutura e a migração em PostgreSQL local via PGlite, com papéis de gestor, clientes e visitante. Os testes de interface usam respostas simuladas; não acessam os dados de produção. Para os testes de interface, copie `.env.example` para `.env.local` (nenhuma senha de usuário é necessária).
+
+---
+
+## Referência da versão anterior
+
+As instruções abaixo descrevem a instalação original. Para novas instalações, aplique também a migração indicada acima depois de inicializar a conta gestora.
+
+## O que estava pronto na versão anterior
 
 - Calendário mensal e semanal, com horários de Brasília.
 - Empresas editáveis: adicionar, renomear, escolher cor e remover.

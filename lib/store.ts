@@ -3,8 +3,9 @@ export const noStore={'Cache-Control':'private, no-store, max-age=0','Pragma':'n
 export const IMAGE_LIMIT=3*1024*1024;
 export const IMAGE_BUCKET='calendar-images';
 export async function readData(supabase:SupabaseClient,userId:string) {
-  const {error:initError}=await supabase.rpc('initialize_calendar');
-  if(initError)throw initError;
+  const {data:workspace,error:accessError}=await supabase.from('calendar_workspaces').select('user_id').eq('user_id',userId).maybeSingle();
+  if(accessError)throw accessError;
+  if(!workspace)throw new Error('Acesso ainda não vinculado.');
   const companies=await supabase.from('calendar_companies').select('id,name,color,created_at').eq('user_id',userId).order('created_at').order('id');
   if(companies.error)throw companies.error;
   const posts:unknown[]=[];

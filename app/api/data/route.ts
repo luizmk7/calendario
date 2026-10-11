@@ -7,7 +7,7 @@ function failure(e:unknown){console.error('Calendar request failed',e);return Re
 export async function GET(){try{const {supabase,user}=await authorizedClient();return Response.json(await readData(supabase,user.id),{headers:noStore});}catch(e){return failure(e)}}
 export async function POST(req:Request){try{
  writeAllowed(req);if(!req.headers.get('content-type')?.includes('application/json'))return Response.json({error:'Formato inválido'},{status:415,headers:noStore});
- const {supabase,user}=await authorizedClient();const body=actionSchema.parse(await req.json());let error;
+ const {supabase,user}=await authorizedClient();const {data:workspace}=await supabase.from('calendar_workspaces').select('user_id').eq('user_id',user.id).maybeSingle();if(!workspace)return Response.json({error:'Sem permissão.'},{status:403,headers:noStore});const body=actionSchema.parse(await req.json());let error;
  if(body.action==='saveCompany')({error}=await supabase.from('calendar_companies').upsert({...body.company,user_id:user.id},{onConflict:'user_id,id'}));
  else if(body.action==='deleteCompany')({error}=await supabase.from('calendar_companies').delete().eq('user_id',user.id).eq('id',body.id));
  else if(body.action==='savePost'){
