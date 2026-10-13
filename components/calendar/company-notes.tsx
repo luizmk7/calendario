@@ -37,7 +37,7 @@ export function CompanyNotes({
   const items = source.filter(
     (n) =>
       n.companyId === companyId &&
-      (filter === "all" || (filter === "resolved" ? n.resolved : !n.resolved)),
+      (tab === "notes" || filter === "all" || (filter === "resolved" ? n.resolved : !n.resolved)),
   );
   async function save(e: React.FormEvent) {
     e.preventDefault();
@@ -88,7 +88,7 @@ export function CompanyNotes({
           </h2>
           <p>
             {tab === "notes"
-              ? "Visível somente para você."
+              ? "Guarde ideias e roteiros de vídeos. Visível somente para você."
               : "Promoções, lançamentos e eventos desta empresa."}
           </p>
         </div>
@@ -110,7 +110,7 @@ export function CompanyNotes({
           </button>
         )}
       </div>
-      <div className="note-filters">
+      {tab === "news" && (<div className="note-filters">
         {[
           ["pending", "Pendentes"],
           ["resolved", "Resolvidas"],
@@ -124,12 +124,12 @@ export function CompanyNotes({
             {l}
           </button>
         ))}
-      </div>
+      </div>)}
       {!items.length ? (
         <div className="empty-day">
           <p>
             {tab === "notes"
-              ? "Nenhuma nota neste filtro."
+              ? "Suas ideias e roteiros ficam aqui. Crie sua primeira nota."
               : "Nenhuma novidade neste filtro."}
           </p>
         </div>
@@ -143,13 +143,13 @@ export function CompanyNotes({
                     ? new Date(n.date + "T12:00:00").toLocaleDateString("pt-BR")
                     : "Sem data específica"}
                 </span>
-                <span>
+                {tab === "news" && (<span>
                   {n.resolved
                     ? "Resolvida"
                     : tab === "news" && !(n as News).readAt
                       ? "Nova"
                       : "Pendente"}
-                </span>
+                </span>)}
               </div>
               <p className="note-body">{n.body}</p>
               <small>
@@ -160,27 +160,22 @@ export function CompanyNotes({
               </small>
               {manager && (
                 <div className="note-actions">
-                  <button
-                    disabled={busy}
-                    onClick={() =>
-                      void mutate(
-                        tab === "notes"
-                          ? {
-                              action: "saveNote",
-                              note: { ...n, resolved: !n.resolved },
-                            }
-                          : {
-                              action: "updateNews",
-                              id: n.id,
-                              resolved: !n.resolved,
-                              read: true,
-                            },
-                      )
-                    }
-                  >
-                    <Check size={15} />
-                    {n.resolved ? "Reabrir" : "Resolver"}
-                  </button>
+                  {tab === "news" && (
+                    <button
+                      disabled={busy}
+                      onClick={() =>
+                        void mutate({
+                          action: "updateNews",
+                          id: n.id,
+                          resolved: !n.resolved,
+                          read: true,
+                        })
+                      }
+                    >
+                      <Check size={15} />
+                      {n.resolved ? "Reabrir" : "Resolver"}
+                    </button>
+                  )}
                   {tab === "notes" ? (
                     <>
                       <button
@@ -256,14 +251,14 @@ export function CompanyNotes({
                 <textarea
                   required
                   maxLength={5000}
-                  rows={5}
+                  rows={editor.kind === "notes" ? 10 : 5}
                   value={editor.body}
                   onChange={(e) =>
                     setEditor({ ...editor, body: e.target.value })
                   }
                   placeholder={
                     editor.kind === "notes"
-                      ? "Gravar o produto novo na próxima visita…"
+                      ? "Escreva sua ideia ou roteiro de vídeo…"
                       : "Sábado teremos música ao vivo…"
                   }
                 />
