@@ -240,114 +240,90 @@ export function PlanningCalendar({
           </>
         )}
         {view === "week" && (
-          <div className="week-agenda" aria-label="Lista da semana">
-            <p className="week-range">
-              {new Date(weekly[0] + "T12:00:00").toLocaleDateString("pt-BR", {
+          <div className="week-picker" aria-label="Dias da semana">
+            {weekly.map((date) => {
+              const count = totals(own.filter((p) => p.date === date)).planned;
+              const dateObject = new Date(date + "T12:00:00");
+              return (
+                <button
+                  key={date}
+                  className="week-day"
+                  aria-pressed={date === active}
+                  aria-current={date === today ? "date" : undefined}
+                  aria-label={`${dateObject.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" })}, ${count} publicações${date === today ? ", hoje" : ""}`}
+                  onClick={() => {
+                    setSelected(date);
+                    if (!date.startsWith(month)) onMonth(date.slice(0, 7));
+                  }}
+                >
+                  <span className="week-day-name">
+                    {dateObject
+                      .toLocaleDateString("pt-BR", { weekday: "short" })
+                      .replace(".", "")}
+                  </span>
+                  <span className="week-day-number">
+                    {Number(date.slice(-2))}
+                  </span>
+                  <span
+                    className={`week-day-dot ${count ? "has-posts" : ""}`}
+                    aria-hidden="true"
+                  />
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </section>
+      <section
+        className="daily-section"
+        key={active}
+        aria-label="Publicações do dia selecionado"
+      >
+        <div className="daily-heading">
+          <div>
+            <p className="eyebrow">CONTEÚDOS DO DIA</p>
+            <h2>
+              {new Date(active + "T12:00:00").toLocaleDateString("pt-BR", {
+                weekday: "long",
                 day: "numeric",
-                month: "short",
-              })}{" "}
-              —{" "}
-              {new Date(weekly[6] + "T12:00:00").toLocaleDateString("pt-BR", {
-                day: "numeric",
-                month: "short",
+                month: "long",
               })}
+            </h2>
+          </div>
+          {manager && (
+            <button
+              className="primary-button quick-add"
+              aria-label="Adicionar publicação"
+              onClick={() => add()}
+            >
+              <Plus size={16} />
+              <span>Adicionar publicação</span>
+            </button>
+          )}
+        </div>
+        {!day.length ? (
+          <div className="empty-day">
+            <CalendarDays size={28} />
+            <p>
+              Nenhuma publicação prevista
+              {filter !== "all" ? " para este filtro" : ""}.
             </p>
-            {weekly.map((date) => (
-              <section
-                className={`agenda-day ${date === today ? "agenda-today" : ""}`}
-                key={date}
-              >
-                <div className="agenda-date">
-                  <h3>
-                    {new Date(date + "T12:00:00").toLocaleDateString("pt-BR", {
-                      weekday: "short",
-                      day: "numeric",
-                      month: "short",
-                    })}
-                    {date === today && <span>Hoje</span>}
-                  </h3>
-                  {manager && (
-                    <button
-                      className="text-button"
-                      onClick={() => add(date)}
-                      aria-label={`Adicionar publicação em ${date}`}
-                    >
-                      <Plus size={15} />
-                      Adicionar publicação
-                    </button>
-                  )}
-                </div>
-                <div className="plan-list">
-                  {visible.some((p) => p.date === date) ? (
-                    visible
-                      .filter((p) => p.date === date)
-                      .map((p) => (
-                        <PlanItem
-                          key={p.id}
-                          post={p}
-                          manager={manager}
-                          busy={busy}
-                          onEdit={onEdit}
-                          onProgress={onProgress}
-                        />
-                      ))
-                  ) : (
-                    <p className="agenda-empty">
-                      {filter === "all"
-                        ? "Sem publicações previstas"
-                        : "Nenhuma publicação neste filtro"}
-                    </p>
-                  )}
-                </div>
-              </section>
+          </div>
+        ) : (
+          <div className="plan-list">
+            {day.map((p) => (
+              <PlanItem
+                key={p.id}
+                post={p}
+                manager={manager}
+                busy={busy}
+                onEdit={onEdit}
+                onProgress={onProgress}
+              />
             ))}
           </div>
         )}
       </section>
-      {view === "month" && (
-        <section className="daily-section">
-          <div className="daily-heading">
-            <div>
-              <p className="eyebrow">CONTEÚDOS DO DIA</p>
-              <h2>
-                {new Date(active + "T12:00:00").toLocaleDateString("pt-BR", {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                })}
-              </h2>
-            </div>
-            {manager && (
-              <button className="secondary-button" onClick={() => add()}>
-                <Plus size={16} />
-                Adicionar publicação
-              </button>
-            )}
-          </div>
-          {!day.length ? (
-            <div className="empty-day">
-              <CalendarDays size={28} />
-              <p>
-                Nenhum conteúdo neste dia
-                {filter !== "all" ? " para este filtro" : ""}.
-              </p>
-            </div>
-          ) : (
-            <div className="plan-list">
-              {day.map((p) => (
-                <PlanItem
-                  key={p.id}
-                  post={p}
-                  manager={manager}
-                  busy={busy}
-                  onEdit={onEdit}
-                  onProgress={onProgress}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-      )}
     </>
   );
 }

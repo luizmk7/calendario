@@ -129,7 +129,7 @@ export default function PortalWorkspace() {
       if (!r.ok) throw new Error(d.error || "Não foi possível salvar.");
       setData(d);
       setError("");
-      toast.success("Alteração salva.");
+      toast.success("Alteração salva.", { id: "portal-save", duration: 2200 });
       return true;
     } catch (e) {
       toast.error((e as Error).message);
@@ -159,7 +159,9 @@ export default function PortalWorkspace() {
       </>
     );
   return (
-    <div className="portal-shell">
+    <div
+      className={`portal-shell ${manager ? "portal-manager" : "portal-client"}`}
+    >
       <Toaster position="top-center" richColors />
       <header className="portal-header">
         <a href="/" className="portal-brand">
@@ -318,49 +320,54 @@ export default function PortalWorkspace() {
                     {manager ? "Anotações" : "Minhas mensagens"}
                   </button>
                 </nav>
-                {section === "calendar" && (
-                  <PlanningCalendar
-                    company={company}
-                    posts={data.posts}
-                    month={month}
-                    onMonth={setMonth}
-                    manager={manager}
-                    onEdit={setEditor}
-                    busy={busy}
-                    onProgress={(p) =>
-                      void mutate({
-                        action: "savePost",
-                        post: {
-                          ...p,
-                          publishedQuantity:
-                            p.publishedQuantity === p.quantity
-                              ? 0
-                              : p.publishedQuantity + 1,
-                        },
-                      })
-                    }
-                  />
-                )}
-                {section === "notes" && (
-                  <CompanyNotes
-                    key={company.id}
-                    companyId={company.id}
-                    manager={manager}
-                    notes={data.notes}
-                    news={data.news}
-                    mutate={mutate}
-                    busy={busy}
-                  />
-                )}
-                {section === "access" && manager && (
-                  <ClientAccessPanel
-                    key={company.id}
-                    companyId={company.id}
-                    clients={data.clients}
-                    mutate={mutate}
-                    busy={busy}
-                  />
-                )}
+                <div
+                  className="portal-section"
+                  key={`${company.id}-${section}`}
+                >
+                  {section === "calendar" && (
+                    <PlanningCalendar
+                      company={company}
+                      posts={data.posts}
+                      month={month}
+                      onMonth={setMonth}
+                      manager={manager}
+                      onEdit={setEditor}
+                      busy={busy}
+                      onProgress={(p) =>
+                        void mutate({
+                          action: "savePost",
+                          post: {
+                            ...p,
+                            publishedQuantity:
+                              p.publishedQuantity === p.quantity
+                                ? 0
+                                : p.publishedQuantity + 1,
+                          },
+                        })
+                      }
+                    />
+                  )}
+                  {section === "notes" && (
+                    <CompanyNotes
+                      key={company.id}
+                      companyId={company.id}
+                      manager={manager}
+                      notes={data.notes}
+                      news={data.news}
+                      mutate={mutate}
+                      busy={busy}
+                    />
+                  )}
+                  {section === "access" && manager && (
+                    <ClientAccessPanel
+                      key={company.id}
+                      companyId={company.id}
+                      clients={data.clients}
+                      mutate={mutate}
+                      busy={busy}
+                    />
+                  )}
+                </div>
               </>
             )}
           </>
@@ -522,7 +529,7 @@ export default function PortalWorkspace() {
           if (!open && !busy) setCompanyEditor(null);
         }}
       >
-        <DialogContent>
+        <DialogContent className="portal-dialog">
           <DialogHeader>
             <DialogTitle>
               {data.companies.some((c) => c.id === companyEditor?.id)

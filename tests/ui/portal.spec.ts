@@ -140,6 +140,12 @@ test("manager plans quantities, records partial publication and keeps notes priv
       .filter({ hasText: "Novidades da semana" }),
   ).toBeVisible();
   expect(data.posts.length).toBe(2);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await page.screenshot({
+    path: "test-results/manager-calendar.png",
+    fullPage: true,
+    animations: "disabled",
+  });
   await page.getByRole("button", { name: "Anotações" }).click();
   await expect(page.getByText("Gravar novo produto")).toBeVisible();
   await page.getByRole("button", { name: "Nova ideia", exact: true }).click();
@@ -167,6 +173,7 @@ test("manager plans quantities, records partial publication and keeps notes priv
   await page.screenshot({
     path: "test-results/manager-notes.png",
     fullPage: true,
+    animations: "disabled",
   });
   page.once("dialog", (dialog) => dialog.accept());
   await page
@@ -201,15 +208,34 @@ test("client mobile view reads own calendar and sends a dated novelty", async ({
   await expect(
     page.getByRole("button", { name: "Semana", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".agenda-day")).toHaveCount(7);
+  await expect(page.locator(".week-day")).toHaveCount(7);
+  await expect(page.locator('.week-day[aria-pressed="true"]')).toHaveAttribute(
+    "aria-current",
+    "date",
+  );
+  const otherDay = page.locator('.week-day:not([aria-pressed="true"])').first();
+  await otherDay.click();
+  await expect(page.getByText("Nenhuma publicação prevista.")).toBeVisible();
+  await page.getByRole("button", { name: "Hoje", exact: true }).click();
   await page.locator(".plan-detail summary").first().click();
   await expect(page.getByText("1 de 3 publicados")).toBeVisible();
   await page.getByRole("button", { name: "Mês", exact: true }).click();
   await expect(page.locator(".calendar-grid")).toBeVisible();
   await page.getByRole("button", { name: "Semana", exact: true }).click();
+  for (let i = 0; i < 4; i++)
+    await page.getByRole("button", { name: "Próximo período" }).click();
+  await expect(
+    page.getByRole("button", { name: "Semana", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Hoje", exact: true }).click();
+  await expect(page.locator('.week-day[aria-pressed="true"]')).toHaveAttribute(
+    "aria-current",
+    "date",
+  );
   await page.screenshot({
     path: "test-results/client-mobile.png",
     fullPage: true,
+    animations: "disabled",
   });
   await page
     .getByRole("button", { name: "Minhas mensagens", exact: true })
@@ -217,6 +243,15 @@ test("client mobile view reads own calendar and sends a dated novelty", async ({
   await page
     .getByRole("button", { name: "Enviar novidade", exact: true })
     .click();
+  const sheet = page.getByRole("dialog");
+  await expect(sheet).toBeVisible();
+  await page.screenshot({
+    path: "test-results/client-sheet.png",
+    animations: "disabled",
+  });
+  const bounds = await sheet.boundingBox();
+  expect(bounds!.y).toBeGreaterThanOrEqual(0);
+  expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(845);
   await page.getByLabel("Sua novidade").fill("Sábado teremos música ao vivo");
   await page.getByLabel("Data relacionada (opcional)").fill("2026-10-17");
   await page

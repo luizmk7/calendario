@@ -279,44 +279,6 @@
   flex-wrap: wrap;
   margin-top: 12px;
 }
-.week-agenda {
-  padding: 0 20px 20px;
-  background: #fff;
-}
-.week-range {
-  color: #64716b;
-  font-size: 13px;
-  padding: 2px 0 14px;
-}
-.agenda-day {
-  border-top: 1px solid #e8ebe9;
-  padding: 14px 0;
-}
-.agenda-date {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.agenda-date h3 {
-  font-size: 13px;
-  font-weight: 600;
-}
-.agenda-date h3 span {
-  display: inline-block;
-  margin-left: 8px;
-  font-size: 11px;
-  background: #edf4ef;
-  color: #284b3b;
-  padding: 4px 7px;
-  border-radius: 5px;
-}
-.agenda-empty {
-  color: #6c7872;
-  font-size: 13px;
-  padding: 4px 0;
-}
 .portal-footer {
   border-top: 1px solid #e1e5e3;
   margin-top: 40px;
@@ -635,16 +597,6 @@
   .portal-shell .day {
     min-height: 68px;
   }
-  .week-agenda {
-    padding: 0 12px 8px;
-  }
-  .agenda-date {
-    flex-wrap: wrap;
-    gap: 2px;
-  }
-  .agenda-date .text-button {
-    font-size: 11px;
-  }
   .plan-detail summary {
     padding: 12px;
     gap: 10px;
@@ -692,4 +644,583 @@
   .portal-footer span {
     font-size: 10px;
   }
+}
+
+/* Rounded, tactile surfaces inspired by the supplied mobile references. */
+.portal-shell {
+  --ink: #202122;
+  --muted: #686b70;
+  --accent: #f38b5f;
+  background: #f1f2f3;
+  color: var(--ink);
+}
+.portal-header {
+  background: #ffffffc9;
+  border-color: #e9eaeb;
+  backdrop-filter: blur(18px);
+}
+.portal-brand,
+.portal-nav button[aria-current="page"] {
+  color: var(--ink);
+}
+.portal-brand > svg {
+  background: var(--ink);
+  color: #fff;
+  padding: 7px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+}
+.portal-brand span {
+  color: var(--accent);
+}
+.portal-main {
+  margin-top: 24px;
+  padding: 32px;
+  background: #fff;
+  border-radius: 32px 32px 0 0;
+  box-shadow: 0 12px 60px #14171a06;
+}
+.portal-title h1 {
+  letter-spacing: -1px;
+}
+.portal-title p,
+.portal-role,
+.notes-heading p,
+.note-meta,
+.portal-stats span,
+.portal-stats small {
+  color: var(--muted);
+}
+.portal-shell .company-avatar {
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+}
+.portal-shell select,
+.portal-shell .secondary-button,
+.portal-shell .today-button {
+  border-radius: 999px;
+  border-color: #e6e7e8;
+  color: var(--ink);
+}
+.portal-shell .primary-button {
+  background: var(--ink);
+  color: #fff;
+  border-radius: 999px;
+  padding: 12px 20px;
+}
+.portal-shell .text-button,
+.portal-shell .note-actions button {
+  color: #50545a;
+}
+.portal-shell svg {
+  stroke-width: 2;
+}
+.portal-shell .icon-button {
+  border-radius: 50%;
+  color: #5f6469;
+}
+.portal-nav {
+  display: inline-flex;
+  width: fit-content;
+  padding: 5px;
+  border: 0;
+  border-radius: 999px;
+  background: #f4f4f5;
+  gap: 4px;
+}
+.portal-nav button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 22px;
+  color: var(--muted);
+}
+.portal-nav button[aria-current="page"] {
+  background: #fff;
+  box-shadow: 0 2px 8px #16191c06;
+}
+.portal-nav svg {
+  width: 20px;
+  height: 20px;
+}
+.portal-stats {
+  border: 0;
+  border-radius: 24px;
+  background: #f5f5f6;
+  padding: 20px 0;
+}
+.portal-stats strong {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.portal-stats > div + div {
+  border-color: #e5e6e7;
+}
+.portal-shell .calendar-panel {
+  border: 0;
+  border-radius: 26px;
+  background: #f5f5f6;
+}
+.portal-shell .calendar-toolbar {
+  background: transparent;
+  padding: 18px 14px;
+}
+.portal-shell .month-control h2 {
+  color: var(--ink);
+  text-transform: none;
+}
+.segmented {
+  border-radius: 999px;
+  background: #eaeaec;
+}
+.segmented button {
+  border-radius: 999px;
+  color: var(--muted);
+}
+.segmented button[aria-pressed="true"] {
+  color: var(--ink);
+  box-shadow: 0 2px 8px #14171a08;
+}
+.portal-shell .weekdays {
+  background: #f5f5f6;
+}
+.portal-shell .calendar-grid {
+  background: #fff;
+}
+.portal-shell .day.selected {
+  background: #fff0e8;
+}
+.portal-shell .day.is-today .day-number {
+  color: #fff;
+  background: #27292b;
+  border-radius: 50%;
+}
+.portal-shell .calendar-item {
+  background: #f1f2f3;
+  color: #50545a;
+  border-radius: 6px;
+}
+.portal-shell .day.selected .calendar-item {
+  background: #fbe4d8;
+  color: #754329;
+}
+.portal-shell .day.selected .mobile-post-count {
+  background: #fbe4d8;
+  color: #754329;
+}
+.week-picker {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+  padding: 4px 16px 18px;
+}
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 96px;
+  border-radius: 20px;
+  color: #56595e;
+  padding: 8px 0;
+}
+.week-day-name {
+  font-size: 12px;
+  text-transform: capitalize;
+}
+.week-day-number {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  font-size: 16px;
+  border-radius: 50%;
+  transition:
+    background 0.22s,
+    color 0.22s,
+    transform 0.22s;
+  font-variant-numeric: tabular-nums;
+}
+.week-day[aria-current="date"] .week-day-name {
+  color: #202122;
+  font-weight: 700;
+}
+.week-day[aria-pressed="true"] .week-day-number {
+  background: var(--accent);
+  color: #202122;
+  font-weight: 700;
+  box-shadow: 0 4px 12px #f38b5f25;
+}
+.week-day-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: transparent;
+}
+.week-day-dot.has-posts {
+  background: #b9562c;
+}
+.portal-shell .daily-section {
+  margin-top: 26px;
+}
+.portal-shell .daily-heading h2 {
+  color: var(--ink);
+  font-size: 20px;
+  letter-spacing: -0.4px;
+}
+.portal-shell .daily-heading .eyebrow {
+  font-size: 10px;
+  color: var(--muted);
+}
+.plan-detail {
+  background: #f5f5f6;
+  border: 0;
+  border-radius: 24px;
+}
+.plan-detail summary {
+  padding: 20px;
+}
+.plan-detail summary:hover {
+  background: #efeff1;
+}
+.plan-icon {
+  background: #fff;
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  color: #242628;
+}
+.plan-icon svg {
+  width: 21px;
+  height: 21px;
+  stroke-width: 2.25;
+}
+.plan-card-copy strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+.plan-format {
+  color: var(--muted);
+}
+.plan-expanded {
+  padding: 16px 22px 20px;
+  border-top: 1px solid #e9e9eb;
+}
+.publication-progress {
+  color: #55595e;
+}
+.notes-tabs {
+  gap: 6px;
+}
+.notes-tabs button {
+  border-radius: 999px;
+  color: var(--muted);
+}
+.notes-tabs button[aria-pressed="true"] {
+  background: #f0f0f2;
+  border-color: transparent;
+  color: var(--ink);
+}
+.note-card {
+  border: 0;
+  background: #f5f5f6;
+  border-radius: 24px;
+  padding: 24px;
+}
+.note-body {
+  color: #303338;
+}
+.note-actions {
+  border-color: #e4e5e7;
+}
+.access-panel {
+  background: #f5f5f6;
+  border: 0;
+  border-radius: 24px;
+}
+.access-form input {
+  border-radius: 14px;
+}
+.portal-footer {
+  border-color: #eee;
+  font-size: 17px;
+}
+.portal-dialog {
+  border-radius: 28px;
+  background: #fff;
+  border-color: #ececee;
+  box-shadow: 0 24px 100px #14171a24;
+}
+.portal-dialog .editor-form label {
+  color: #50545a;
+}
+.portal-dialog .editor-form input,
+.portal-dialog .editor-form textarea,
+.portal-dialog .editor-form select {
+  border-radius: 14px;
+  border: 1px solid #e6e7e9;
+  background: #f8f8f9;
+  color: #202122;
+  padding: 12px;
+}
+.portal-dialog .primary-button {
+  border-radius: 999px;
+  background: #202122;
+  color: #fff;
+  box-shadow: none;
+}
+.portal-dialog .note-actions button {
+  color: #50545a;
+}
+.portal-section,
+.daily-section {
+  animation: portal-appear 0.24s ease both;
+}
+.plan-detail,
+.note-card {
+  animation: card-arrive 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.portal-shell button {
+  transition:
+    background 0.2s,
+    color 0.2s,
+    box-shadow 0.2s,
+    scale 0.18s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.portal-shell button:active {
+  scale: 0.97;
+}
+.portal-shell button:focus-visible,
+.portal-shell select:focus-visible {
+  outline-color: #b65c35;
+}
+.portal-dialog[data-state="open"] {
+  animation: sheet-arrive 0.32s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes portal-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes card-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sheet-arrive {
+  from {
+    opacity: 0;
+    margin-top: 18px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+@media (hover: hover) {
+  .week-day:hover {
+    background: #ebebed;
+  }
+  .note-card:hover {
+    box-shadow: 0 8px 25px #20212206;
+  }
+}
+@media (max-width: 767px) {
+  .portal-shell {
+    background: #fff;
+    padding-bottom: calc(98px + env(safe-area-inset-bottom));
+  }
+  .portal-header {
+    background: #fff;
+    border: 0;
+    padding: 0 20px;
+  }
+  .portal-main {
+    padding: 22px 20px 0;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .portal-title {
+    margin-bottom: 22px;
+  }
+  .portal-title h1 {
+    font-size: 26px;
+  }
+  .portal-role {
+    font-size: 10px;
+  }
+  .portal-company-heading {
+    margin-bottom: 20px;
+  }
+  .portal-nav {
+    position: fixed;
+    z-index: 30;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    left: 16px;
+    width: calc(100% - 104px);
+    max-width: 430px;
+    margin: 0;
+    padding: 6px;
+    gap: 2px;
+    background: #ffffffed;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 40px #17191c17;
+    border: 1px solid #efeff1;
+  }
+  .portal-nav button {
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 4px;
+    font-size: 10px;
+    min-height: 52px;
+  }
+  .portal-nav button[aria-current="page"] {
+    background: #efeff1;
+    box-shadow: none;
+  }
+  .portal-nav svg {
+    width: 20px;
+    height: 20px;
+  }
+  .quick-add {
+    position: fixed;
+    z-index: 31;
+    right: 16px;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    width: 60px;
+    height: 60px;
+    min-height: 60px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: #202122 !important;
+    color: #fff !important;
+    box-shadow: 0 8px 24px #17191c18 !important;
+  }
+  .quick-add svg {
+    width: 27px;
+    height: 27px;
+    stroke-width: 1.8;
+  }
+  .quick-add > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .portal-stats {
+    padding: 15px 0;
+    margin-bottom: 18px;
+    border-radius: 22px;
+  }
+  .portal-stats > div {
+    padding: 0 12px;
+  }
+  .portal-stats strong {
+    font-size: 25px;
+  }
+  .portal-shell .calendar-toolbar {
+    padding: 12px;
+    gap: 10px;
+  }
+  .portal-shell .calendar-options select {
+    min-height: 40px;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+  .week-picker {
+    gap: 0;
+    padding: 0 6px 12px;
+  }
+  .week-day {
+    min-height: 86px;
+    gap: 7px;
+    border-radius: 16px;
+  }
+  .week-day-name {
+    font-size: 11px;
+  }
+  .week-day-number {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+  .portal-shell .daily-heading h2 {
+    font-size: 18px;
+  }
+  .plan-detail summary {
+    padding: 16px;
+    gap: 12px;
+  }
+  .plan-icon {
+    width: 42px;
+    height: 42px;
+  }
+  .plan-card-copy strong {
+    font-size: 14px;
+  }
+  .note-card {
+    padding: 20px;
+  }
+  .portal-footer {
+    padding: 20px 0;
+    margin-top: 28px;
+  }
+  .portal-dialog {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    translate: 0 0 !important;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    max-height: 92svh;
+    border-radius: 28px 28px 0 0;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  }
+  .portal-dialog[data-state="open"] {
+    animation: mobile-sheet-arrive 0.32s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  @keyframes mobile-sheet-arrive {
+    from {
+      opacity: 0;
+      transform: translateY(32px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-shell *,
+  .portal-dialog,
+  .portal-dialog * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media (max-width: 767px) {
+  .portal-shell:not(:has(.quick-add)) .portal-nav {
+    width: calc(100% - 32px);
+  }
+}
+.portal-shell .day.selected {
+  box-shadow: inset 0 0 0 1px #d57850;
 }

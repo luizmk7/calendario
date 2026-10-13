@@ -111,7 +111,8 @@ export function CompanyNotes({
         </div>
         {(tab === "notes" || !manager) && (
           <button
-            className="primary-button"
+            className="primary-button quick-add"
+            aria-label={tab === "notes" ? "Nova ideia" : "Enviar novidade"}
             onClick={() =>
               setEditor({
                 kind: tab,
@@ -123,7 +124,7 @@ export function CompanyNotes({
             }
           >
             <Plus size={16} />
-            {tab === "notes" ? "Nova ideia" : "Enviar novidade"}
+            <span>{tab === "notes" ? "Nova ideia" : "Enviar novidade"}</span>
           </button>
         )}
       </div>
