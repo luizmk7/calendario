@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -47,6 +47,9 @@ export function PlanningCalendar({
     today.startsWith(month) ? today : month + "-01",
   );
   const [view, setView] = useState<"month" | "week">("month");
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 767px)").matches) setView("week");
+  }, []);
   const [filter, setFilter] = useState("all");
   const active = selected.startsWith(month) ? selected : month + "-01";
   const first = new Date(month + "-01T12:00:00");
@@ -89,12 +92,12 @@ export function PlanningCalendar({
       setSelected(value);
     }
   }
-  function add() {
+  function add(date = active) {
     onEdit({
       id: crypto.randomUUID(),
       companyId: company.id,
       title: "",
-      date: active,
+      date,
       format: "Stories",
       topic: "",
       quantity: 1,
@@ -107,7 +110,6 @@ export function PlanningCalendar({
         <div>
           <span>Previstas no mês</span>
           <strong>{summary.planned}</strong>
-          <small>Conteúdos planejados</small>
         </div>
         <div>
           <span>Já publicadas</span>
@@ -122,20 +124,7 @@ export function PlanningCalendar({
         <div>
           <span>A publicar</span>
           <strong>{summary.planned - summary.published}</strong>
-          <small>Planejamento em andamento</small>
         </div>
-      </div>
-      <div className="format-summary">
-        {formats.map((f) => {
-          const t = totals(monthlyPosts.filter((p) => p.format === f));
-          return (
-            <span key={f}>
-              {icon(f)}
-              <b>{f}</b> {t.published}/{t.planned}
-            </span>
-          );
-        })}
-        <small>publicados / previstos</small>
       </div>
       <section
         className="calendar-panel"
@@ -199,136 +188,223 @@ export function PlanningCalendar({
             </div>
           </div>
         </div>
-        <div className="weekdays">
-          {["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"].map((v) => (
-            <span key={v}>{v}</span>
-          ))}
-        </div>
-        <div className="calendar-grid">
-          {(view === "month" ? monthly : weekly).map((date) => {
-            const list = visible.filter((p) => p.date === date);
-            const count = totals(list);
-            return (
-              <button
-                key={date}
-                className={`day ${date === active ? "selected" : ""} ${date === today ? "is-today" : ""} ${date.startsWith(month) ? "" : "outside"}`}
-                aria-pressed={date === active}
-                aria-label={`${date}, ${count.planned} publicações`}
-                onClick={() => {
-                  setSelected(date);
-                  if (!date.startsWith(month)) onMonth(date.slice(0, 7));
-                }}
-              >
-                <span className="day-number">{Number(date.slice(-2))}</span>
-                <div className="day-items">
-                  {formats.map((f) => {
-                    const t = totals(list.filter((p) => p.format === f));
-                    return t.planned ? (
-                      <div
-                        className={`calendar-item ${f.toLowerCase()}`}
-                        key={f}
-                      >
-                        {icon(f)}
-                        <span>
-                          {t.planned} {f}
-                        </span>
-                        {t.published === t.planned && <Check size={12} />}
-                      </div>
-                    ) : null;
-                  })}
-                </div>
-                {count.planned > 0 && (
-                  <span className="mobile-post-count">
-                    {count.planned} posts
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
-        <div className="calendar-footer">
-          <span>Planejamento flexível</span>
-          <span>Datas podem ser ajustadas</span>
-        </div>
-      </section>
-      <section className="daily-section">
-        <div className="daily-heading">
-          <div>
-            <p className="eyebrow">CONTEÚDOS DO DIA</p>
-            <h2>
-              {new Date(active + "T12:00:00").toLocaleDateString("pt-BR", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
+        {view === "month" && (
+          <>
+            <div className="weekdays">
+              {["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"].map((v) => (
+                <span key={v}>{v}</span>
+              ))}
+            </div>
+            <div className="calendar-grid">
+              {(view === "month" ? monthly : weekly).map((date) => {
+                const list = visible.filter((p) => p.date === date);
+                const count = totals(list);
+                return (
+                  <button
+                    key={date}
+                    className={`day ${date === active ? "selected" : ""} ${date === today ? "is-today" : ""} ${date.startsWith(month) ? "" : "outside"}`}
+                    aria-pressed={date === active}
+                    aria-label={`${date}, ${count.planned} publicações`}
+                    onClick={() => {
+                      setSelected(date);
+                      if (!date.startsWith(month)) onMonth(date.slice(0, 7));
+                    }}
+                  >
+                    <span className="day-number">{Number(date.slice(-2))}</span>
+                    <div className="day-items">
+                      {formats.map((f) => {
+                        const t = totals(list.filter((p) => p.format === f));
+                        return t.planned ? (
+                          <div
+                            className={`calendar-item ${f.toLowerCase()}`}
+                            key={f}
+                          >
+                            {icon(f)}
+                            <span>
+                              {t.planned} {f}
+                            </span>
+                            {t.published === t.planned && <Check size={12} />}
+                          </div>
+                        ) : null;
+                      })}
+                    </div>
+                    {count.planned > 0 && (
+                      <span className="mobile-post-count">
+                        {count.planned} posts
+                      </span>
+                    )}
+                  </button>
+                );
               })}
-            </h2>
-          </div>
-          {manager && (
-            <button className="secondary-button" onClick={add}>
-              <Plus size={16} />
-              Adicionar
-            </button>
-          )}
-        </div>
-        {!day.length ? (
-          <div className="empty-day">
-            <CalendarDays size={28} />
-            <p>
-              Nenhum conteúdo neste dia
-              {filter !== "all" ? " para este filtro" : ""}.
+            </div>
+          </>
+        )}
+        {view === "week" && (
+          <div className="week-agenda" aria-label="Lista da semana">
+            <p className="week-range">
+              {new Date(weekly[0] + "T12:00:00").toLocaleDateString("pt-BR", {
+                day: "numeric",
+                month: "short",
+              })}{" "}
+              —{" "}
+              {new Date(weekly[6] + "T12:00:00").toLocaleDateString("pt-BR", {
+                day: "numeric",
+                month: "short",
+              })}
             </p>
-          </div>
-        ) : (
-          <div className="plan-list">
-            {day.map((p) => (
-              <article className="plan-card" key={p.id}>
-                <div className={`plan-icon ${p.format.toLowerCase()}`}>
-                  {icon(p.format)}
-                </div>
-                <div className="plan-card-copy">
-                  <span className="plan-format">
-                    {p.quantity} {p.format}{" "}
-                    {p.quantity === 1 ? "previsto" : "previstos"}
-                  </span>
+            {weekly.map((date) => (
+              <section
+                className={`agenda-day ${date === today ? "agenda-today" : ""}`}
+                key={date}
+              >
+                <div className="agenda-date">
                   <h3>
-                    {p.title && p.title !== p.format
-                      ? p.title
-                      : p.topic || "Tema a definir"}
+                    {new Date(date + "T12:00:00").toLocaleDateString("pt-BR", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                    })}
+                    {date === today && <span>Hoje</span>}
                   </h3>
-                  {p.topic && p.title && p.title !== p.format && (
-                    <p>{p.topic}</p>
-                  )}
-                  <small>
-                    {p.publishedQuantity === p.quantity
-                      ? "Publicado"
-                      : p.publishedQuantity
-                        ? `${p.publishedQuantity} de ${p.quantity} publicados`
-                        : "Planejado"}
-                  </small>
-                </div>
-                {manager && (
-                  <div className="plan-buttons">
+                  {manager && (
                     <button
-                      className="secondary-button"
-                      disabled={busy}
-                      onClick={() => onProgress(p)}
+                      className="text-button"
+                      onClick={() => add(date)}
+                      aria-label={`Adicionar publicação em ${date}`}
                     >
-                      {p.publishedQuantity === p.quantity
-                        ? "Reabrir"
-                        : p.quantity > 1
-                          ? "+1 publicado"
-                          : "Já publiquei"}
+                      <Plus size={15} />
+                      Adicionar publicação
                     </button>
-                    <button className="text-button" onClick={() => onEdit(p)}>
-                      Editar
-                    </button>
-                  </div>
-                )}
-              </article>
+                  )}
+                </div>
+                <div className="plan-list">
+                  {visible.some((p) => p.date === date) ? (
+                    visible
+                      .filter((p) => p.date === date)
+                      .map((p) => (
+                        <PlanItem
+                          key={p.id}
+                          post={p}
+                          manager={manager}
+                          busy={busy}
+                          onEdit={onEdit}
+                          onProgress={onProgress}
+                        />
+                      ))
+                  ) : (
+                    <p className="agenda-empty">
+                      {filter === "all"
+                        ? "Sem publicações previstas"
+                        : "Nenhuma publicação neste filtro"}
+                    </p>
+                  )}
+                </div>
+              </section>
             ))}
           </div>
         )}
       </section>
+      {view === "month" && (
+        <section className="daily-section">
+          <div className="daily-heading">
+            <div>
+              <p className="eyebrow">CONTEÚDOS DO DIA</p>
+              <h2>
+                {new Date(active + "T12:00:00").toLocaleDateString("pt-BR", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                })}
+              </h2>
+            </div>
+            {manager && (
+              <button className="secondary-button" onClick={() => add()}>
+                <Plus size={16} />
+                Adicionar publicação
+              </button>
+            )}
+          </div>
+          {!day.length ? (
+            <div className="empty-day">
+              <CalendarDays size={28} />
+              <p>
+                Nenhum conteúdo neste dia
+                {filter !== "all" ? " para este filtro" : ""}.
+              </p>
+            </div>
+          ) : (
+            <div className="plan-list">
+              {day.map((p) => (
+                <PlanItem
+                  key={p.id}
+                  post={p}
+                  manager={manager}
+                  busy={busy}
+                  onEdit={onEdit}
+                  onProgress={onProgress}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
     </>
+  );
+}
+
+function PlanItem({
+  post: p,
+  manager,
+  busy,
+  onEdit,
+  onProgress,
+}: {
+  post: PlanPost;
+  manager: boolean;
+  busy: boolean;
+  onEdit: (p: PlanPost) => void;
+  onProgress: (p: PlanPost) => void;
+}) {
+  return (
+    <details className="plan-detail">
+      <summary>
+        <span className="plan-icon">{icon(p.format)}</span>
+        <span className="plan-card-copy">
+          <span className="plan-format">
+            {p.quantity} {p.format}
+          </span>
+          <strong>
+            {p.title && p.title !== p.format
+              ? p.title
+              : p.topic || "Tema a definir"}
+          </strong>
+        </span>
+        <ChevronRight className="detail-chevron" size={17} />
+      </summary>
+      <div className="plan-expanded">
+        {p.topic && p.title && p.title !== p.format && <p>{p.topic}</p>}
+        <p className="publication-progress">
+          {p.publishedQuantity} de {p.quantity} publicados
+        </p>
+        {manager && (
+          <div className="plan-buttons">
+            <button
+              className="secondary-button"
+              disabled={busy}
+              onClick={() => onProgress(p)}
+            >
+              {p.publishedQuantity === p.quantity
+                ? "Desmarcar publicação"
+                : p.quantity > 1
+                  ? "+1 publicado"
+                  : "Já publiquei"}
+            </button>
+            <button className="text-button" onClick={() => onEdit(p)}>
+              Editar publicação
+            </button>
+          </div>
+        )}
+      </div>
+    </details>
   );
 }

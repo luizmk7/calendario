@@ -16,7 +16,7 @@ O código reconhece a falta da nova tabela e mantém o calendário anterior disp
 
 1. Em Authentication → Users → Add user, crie uma conta exclusiva com e-mail e senha e marque o e-mail como confirmado. Não use seu login de gestor para um cliente.
 2. Entre no sistema com sua conta gestora.
-3. Escolha a empresa → Acessos → informe o e-mail confirmado → Vincular acesso.
+3. Escolha a empresa → Acessos dos clientes → informe o e-mail confirmado → Vincular acesso.
 4. Envie ao cliente o endereço do sistema e combine o acesso por um canal seguro. O sistema não envia e-mails automaticamente.
 5. O cliente entra no mesmo endereço e vê somente a empresa vinculada. Ele pode consultar o planejamento e enviar novidades.
 
@@ -26,8 +26,8 @@ Cada conta de cliente tem uma empresa. Uma empresa pode ter mais de um cliente a
 
 - **Calendário:** data, formato, quantidade, título e tema opcionais; sem mídia ou horário no novo formulário.
 - **Publicação parcial:** para 3 Stories, use “+1 publicado” a cada publicação ou informe o total no editor. Os resumos somam quantidades, não cards.
-- **Notas e novidades:** notas internas privadas; clientes só enviam novidades da própria empresa. Data opcional, pendente/resolvida e marcação de lida.
-- **Acessos:** somente o gestor pode vincular e revogar clientes.
+- **Anotações:** Minhas notas reúne ideias e roteiros privados, com opções de abrir, editar e apagar. Mensagens do cliente reúne novidades da própria empresa. Data opcional, sem filtros ou status.
+- **Acessos dos clientes:** somente o gestor pode vincular e revogar clientes.
 - O painel busca atualizações a cada 30 segundos enquanto visível e ao voltar à janela. Há também atualização manual.
 
 As observações anteriores aparecem no editor do gestor como texto privado. Os campos antigos de observações, horário e imagens continuam no banco; não são enviados ao cliente. O calendário novo não oferece upload nem publicação no Instagram.

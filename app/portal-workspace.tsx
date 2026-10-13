@@ -98,7 +98,7 @@ export default function PortalWorkspace() {
     [month],
   );
   useEffect(() => {
-    void load();
+    void load(true);
     const update = () => {
       if (document.visibilityState === "visible") void load(true);
     };
@@ -182,16 +182,7 @@ export default function PortalWorkspace() {
       <main className="portal-main" inert={busy}>
         <div className="portal-title">
           <div>
-            <p className="eyebrow">
-              {manager
-                ? "PLANEJAR. ORGANIZAR. ACOMPANHAR."
-                : "SEU CONTEÚDO, BEM ORGANIZADO."}
-            </p>
-            <h1>
-              {manager
-                ? "Calendário de postagens"
-                : "Planejamento da sua empresa"}
-            </h1>
+            <h1>{manager ? "Meu planejamento" : "Meu calendário"}</h1>
             <p>
               {manager
                 ? "Uma visão clara de cada empresa, no seu ritmo."
@@ -199,12 +190,13 @@ export default function PortalWorkspace() {
             </p>
           </div>
           <button
-            className="icon-button"
+            className="text-button refresh-button"
             aria-label="Atualizar painel"
             disabled={busy || loading}
             onClick={() => void load()}
           >
             <RefreshCw size={18} />
+            <span>Atualizar</span>
           </button>
         </div>
         {error && (
@@ -229,29 +221,27 @@ export default function PortalWorkspace() {
           </div>
         ) : (
           <>
-            <div className="company-switcher" aria-label="Empresas">
-              {data.companies.map((c) => (
-                <button
-                  key={c.id}
-                  aria-pressed={company?.id === c.id}
-                  onClick={() => chooseCompany(c.id)}
-                >
-                  <i style={{ background: c.color }} />
-                  {c.name}
-                  {manager &&
-                    data.news.some(
-                      (n) => n.companyId === c.id && !n.readAt,
-                    ) && (
-                      <span
-                        className="unread-dot"
-                        aria-label="Novas novidades"
-                      />
+            {manager && (
+              <div className="company-selector">
+                <label>
+                  Empresa
+                  <select
+                    aria-label="Selecionar empresa"
+                    value={company?.id || ""}
+                    onChange={(e) => chooseCompany(e.target.value)}
+                  >
+                    {!company && (
+                      <option value="">Selecione uma empresa</option>
                     )}
-                </button>
-              ))}
-              {manager && (
+                    {data.companies.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <button
-                  aria-label="Adicionar empresa"
+                  className="text-button"
                   onClick={() =>
                     setCompanyEditor({
                       id: crypto.randomUUID(),
@@ -260,11 +250,11 @@ export default function PortalWorkspace() {
                     })
                   }
                 >
-                  <Plus size={17} />
-                  Empresa
+                  <Plus size={16} />
+                  Adicionar empresa
                 </button>
-              )}
-            </div>
+              </div>
+            )}
             {!company ? (
               <div className="empty-company">
                 <h2>Adicione sua primeira empresa</h2>
@@ -287,11 +277,24 @@ export default function PortalWorkspace() {
                   <h2>{company.name}</h2>
                   {manager && (
                     <button
-                      className="icon-button"
+                      className="text-button company-setting"
                       aria-label="Editar empresa"
                       onClick={() => setCompanyEditor({ ...company })}
                     >
                       <Settings2 size={17} />
+                      <span>Editar empresa</span>
+                    </button>
+                  )}
+                  {manager && (
+                    <button
+                      className="text-button company-setting"
+                      aria-pressed={section === "access"}
+                      onClick={() =>
+                        setSection(section === "access" ? "calendar" : "access")
+                      }
+                    >
+                      <Users size={17} />
+                      Acessos dos clientes
                     </button>
                   )}
                 </div>
@@ -301,7 +304,7 @@ export default function PortalWorkspace() {
                     onClick={() => setSection("calendar")}
                   >
                     <CalendarDays size={17} />
-                    Calendário
+                    {manager ? "Calendário" : "Meu calendário"}
                   </button>
                   <button
                     aria-current={section === "notes" ? "page" : undefined}
@@ -312,28 +315,8 @@ export default function PortalWorkspace() {
                     ) : (
                       <MessageSquare size={17} />
                     )}{" "}
-                    {manager ? "Notas e novidades" : "Novidades"}
-                    {data.news.filter(
-                      (n) => n.companyId === company.id && !n.readAt,
-                    ).length > 0 && (
-                      <span className="count-badge">
-                        {
-                          data.news.filter(
-                            (n) => n.companyId === company.id && !n.readAt,
-                          ).length
-                        }
-                      </span>
-                    )}
+                    {manager ? "Anotações" : "Minhas mensagens"}
                   </button>
-                  {manager && (
-                    <button
-                      aria-current={section === "access" ? "page" : undefined}
-                      onClick={() => setSection("access")}
-                    >
-                      <Users size={17} />
-                      Acessos
-                    </button>
-                  )}
                 </nav>
                 {section === "calendar" && (
                   <PlanningCalendar
