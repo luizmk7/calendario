@@ -1073,10 +1073,10 @@
     margin: 0;
     padding: 6px;
     gap: 2px;
-    background: #ffffffed;
+    background: #25282d;
     backdrop-filter: blur(20px);
     box-shadow: 0 8px 40px #17191c17;
-    border: 1px solid #efeff1;
+    border: 1px solid #35393f;
   }
   .portal-nav button {
     flex: 1;
@@ -1087,7 +1087,8 @@
     min-height: 52px;
   }
   .portal-nav button[aria-current="page"] {
-    background: #efeff1;
+    background: #f38b5f;
+    color: #202122;
     box-shadow: none;
   }
   .portal-nav svg {
@@ -1223,4 +1224,17 @@
 }
 .portal-shell .day.selected {
   box-shadow: inset 0 0 0 1px #d57850;
+}
+
+@media (max-width: 767px) {
+  .portal-nav button { color: #e4e6e9; }
+  .portal-nav button[aria-current="page"] { color: #202122; }
+  .portal-shell .message-compose-button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 4px;
+    background: #f38b5f;
+    color: #202122;
+    font-weight: 600;
+  }
 }

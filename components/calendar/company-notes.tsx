@@ -111,7 +111,7 @@ export function CompanyNotes({
         </div>
         {(tab === "notes" || !manager) && (
           <button
-            className="primary-button quick-add"
+            className={manager ? "primary-button quick-add" : "primary-button message-compose-button"}
             aria-label={tab === "notes" ? "Nova ideia" : "Enviar novidade"}
             onClick={() =>
               setEditor({
