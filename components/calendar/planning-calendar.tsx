@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -46,10 +46,7 @@ export function PlanningCalendar({
   const [selected, setSelected] = useState(
     today.startsWith(month) ? today : month + "-01",
   );
-  const [view, setView] = useState<"month" | "week">("month");
-  useEffect(() => {
-    if (window.matchMedia("(max-width: 767px)").matches) setView("week");
-  }, []);
+  const [view, setView] = useState<"month" | "week">("week");
   const [filter, setFilter] = useState("all");
   const active = selected.startsWith(month) ? selected : month + "-01";
   const first = new Date(month + "-01T12:00:00");
@@ -174,16 +171,16 @@ export function PlanningCalendar({
             </select>
             <div className="segmented">
               <button
-                aria-pressed={view === "month"}
-                onClick={() => setView("month")}
-              >
-                Mês
-              </button>
-              <button
                 aria-pressed={view === "week"}
                 onClick={() => setView("week")}
               >
                 Semana
+              </button>
+              <button
+                aria-pressed={view === "month"}
+                onClick={() => setView("month")}
+              >
+                Mês
               </button>
             </div>
           </div>

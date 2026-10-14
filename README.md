@@ -7,7 +7,7 @@ Painel simples para planejar e acompanhar publicações de várias empresas. Ver
 
 A nova versão inclui calendário por cliente, quantidades previstas/publicadas, temas opcionais, notas internas privadas, novidades enviadas pelo cliente e gestão de acessos. O gestor continua vendo todas as suas empresas.
 
-O visual usa duas áreas principais: Calendário e Anotações. No celular, o calendário abre com uma faixa de sete dias e os conteúdos do dia selecionado, com opção de mês. Publicações mostram os detalhes ao abrir. Minhas notas guarda ideias e roteiros privados, com prévia, leitura completa, edição e exclusão; Mensagens do cliente reúne as novidades sem filtros de status.
+O visual usa duas áreas principais: Calendário e Anotações. No celular e no computador, o calendário abre com uma faixa de sete dias e os conteúdos do dia selecionado, com opção de mês. Publicações mostram os detalhes ao abrir. Minhas notas guarda ideias e roteiros privados, com prévia, leitura completa, edição e exclusão; Mensagens do cliente reúne as novidades sem filtros de status.
 
 **Banco existente:** siga [ATIVAR-PAINEL-CLIENTE.md](supabase/ATIVAR-PAINEL-CLIENTE.md) e execute [a migração](supabase/migrations/20261011_client_portal.sql) no Supabase. Sem a migração, o calendário anterior continua disponível para contas já inicializadas. A migração não é executada automaticamente pelo deploy.
 

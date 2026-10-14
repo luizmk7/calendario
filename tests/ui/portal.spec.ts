@@ -123,6 +123,9 @@ test("manager plans quantities, records partial publication and keeps notes priv
   page,
 }) => {
   const data = await fixture(page, "manager");
+  await expect(page.getByRole("button", {name: "Semana", exact: true})).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".segmented button").first()).toHaveText("Semana");
+  await page.getByRole("button", {name: "Mês", exact: true}).click();
   await page.locator(".plan-detail summary").first().click();
   await page.getByRole("button", { name: "+1 publicado", exact: true }).click();
   await expect(page.getByText("2 de 3 publicados")).toBeVisible();
